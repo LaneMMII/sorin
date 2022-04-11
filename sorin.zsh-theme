@@ -28,25 +28,106 @@
 # 15 bright white
 #
 
+# https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/spectrum.zsh#L23 ############
+typeset -AHg FX FG BG
+
+FX=(
+  reset     "%{[00m%}"
+  bold      "%{[01m%}" no-bold      "%{[22m%}"
+  italic    "%{[03m%}" no-italic    "%{[23m%}"
+  underline "%{[04m%}" no-underline "%{[24m%}"
+  blink     "%{[05m%}" no-blink     "%{[25m%}"
+  reverse   "%{[07m%}" no-reverse   "%{[27m%}"
+)
+
+for color in {000..255}; do
+  FG[$color]="%{[38;5;${color}m%}"
+  BG[$color]="%{[48;5;${color}m%}"
+done
+
+# Show all 256 colors with color number
+function spectrum_ls() {
+  setopt localoptions nopromptsubst
+  local ZSH_SPECTRUM_TEXT=${ZSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab oris}
+  for code in {000..255}; do
+    print -P -- "$code: ${FG[$code]}${ZSH_SPECTRUM_TEXT}%{$reset_color%}"
+  done
+}
+
+# Show all 256 colors where the background is set to specific color
+function spectrum_bls() {
+  setopt localoptions nopromptsubst
+  local ZSH_SPECTRUM_TEXT=${ZSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab oris}
+  for code in {000..255}; do
+    print -P -- "$code: ${BG[$code]}${ZSH_SPECTRUM_TEXT}%{$reset_color%}"
+  done
+}
+
+##################################################################################
+
+right_triangle() {
+  echo $'\ue0b0'
+}
+
+hashtag() {
+  echo $'\u266f'
+}
+
+arrow_start() {
+  print -n "%{$FG[$ARROW_FG]%}%{$BG[$ARROW_BG]%}%B"
+}
+
+arrow_end() {
+   print -n "%b%{$reset_color%}%{$FG[$ARROW_BG]%}%{$BG[$NEXT_ARROW_BG]%}$(right_triangle)%{$reset_color%}"
+}
+
+ok_username() {
+  ARROW_FG="251"
+  ARROW_BG="241"
+  NEXT_ARROW_BG="153"
+  print -n "$(arrow_start) %n $(arrow_end)"
+}
+
+err_username() {
+  ARROW_FG="016"
+  ARROW_BG="160"
+  NEXT_ARROW_BG="153"
+  print -n "$(arrow_start) %n $(arrow_end)"
+}
+
+current_time() {
+  ARROW_FG="016"
+  ARROW_BG="153"
+  NEXT_ARROW_BG="000"
+  print -n "$(arrow_start) %{$FG[239]%}%*%{$reset_color%} $(arrow_end)"
+}
+
+# return err_username if there are errors, ok_username otherwise
+username() {
+  print -n "%(?.$(ok_username).$(err_username))"
+}
+
 _prompt_node_version() {
   NODE_VERSION=$(nvm current)
   print -n " %B%F{3}${NODE_VERSION}%b"
 }
 
-_prompt_sorin_vimode() {
-  case ${KEYMAP} in
-    vicmd) print -n ' %B%F{2}❮%F{3}❮%F{1}❮%b' ;;
-    *) print -n ' %B%F{1}❯%F{7}❯%F{4}❯%b' ;;
-  esac
+_prompt() {
+  print -n " 🇺🇸 %B%F{7}\u266e%b"
+}
+
+_directory() {
+  print -n "%B%{$FG[243]%}%~%b"
 }
 
 _prompt_sorin_keymap_select() {
   zle reset-prompt
   zle -R
 }
+
 if autoload -Uz is-at-least && is-at-least 5.3; then
   autoload -Uz add-zle-hook-widget && \
-      add-zle-hook-widget -Uz keymap-select _prompt_sorin_keymap_select
+    add-zle-hook-widget -Uz keymap-select _prompt_sorin_keymap_select
 else
   zle -N zle-keymap-select _prompt_sorin_keymap_select
 fi
@@ -62,7 +143,7 @@ if (( ${+functions[git-info]} )); then
   zstyle ':zim:git-info:action' format '%F{7}:%F{9}%s'
   zstyle ':zim:git-info:ahead' format ' %F{13}⬆'
   zstyle ':zim:git-info:behind' format ' %F{13}⬇'
-  zstyle ':zim:git-info:branch' format ' %F{2}%b'
+  zstyle ':zim:git-info:branch' format ' %{$FG[235]%}%{$BG[112]%} \ue0a0 %b %K{0}'
   zstyle ':zim:git-info:commit' format ' %F{3}%c'
   zstyle ':zim:git-info:indexed' format ' %F{2}🎁'
   zstyle ':zim:git-info:unindexed' format ' %F{1}🚧'
@@ -77,6 +158,10 @@ if (( ${+functions[git-info]} )); then
 fi
 
 # Define prompts.
-PS1='${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}%B%F{4}%~%b%(!. %B%F{1}#%b.)$(_prompt_sorin_vimode)%f '
-RPS1='${VIRTUAL_ENV:+"%F{3}(${VIRTUAL_ENV:t})"}%(?:: %F{1}✘ %?)$(_prompt_node_version)${VIM:+" %B%F{6}V%b"}${(e)git_info[status]}%f'
+PS1='
+$(username)$(current_time)
+${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)$(_prompt)%f '
+
+RPS1='%(?:: %F{1}✘ %?)$(_prompt_node_version)${(e)git_info[status]}%f'
+
 SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
