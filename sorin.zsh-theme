@@ -28,10 +28,15 @@
 # 15 bright white
 #
 
+_prompt_node_version() {
+  NODE_VERSION=$(nvm current)
+  print -n " %B%F{3}${NODE_VERSION}%b"
+}
+
 _prompt_sorin_vimode() {
   case ${KEYMAP} in
     vicmd) print -n ' %B%F{2}❮%F{3}❮%F{1}❮%b' ;;
-    *) print -n ' %B%F{1}❯%F{3}❯%F{2}❯%b' ;;
+    *) print -n ' %B%F{1}❯%F{7}❯%F{4}❯%b' ;;
   esac
 }
 
@@ -59,11 +64,11 @@ if (( ${+functions[git-info]} )); then
   zstyle ':zim:git-info:behind' format ' %F{13}⬇'
   zstyle ':zim:git-info:branch' format ' %F{2}%b'
   zstyle ':zim:git-info:commit' format ' %F{3}%c'
-  zstyle ':zim:git-info:indexed' format ' %F{2}✚'
-  zstyle ':zim:git-info:unindexed' format ' %F{4}✱'
+  zstyle ':zim:git-info:indexed' format ' %F{2}🎁'
+  zstyle ':zim:git-info:unindexed' format ' %F{1}🚧'
   zstyle ':zim:git-info:position' format ' %F{13}%p'
   zstyle ':zim:git-info:stashed' format ' %F{6}✭'
-  zstyle ':zim:git-info:untracked' format ' %F{7}◼'
+  zstyle ':zim:git-info:untracked' format ' %F{7}⭐'
   zstyle ':zim:git-info:keys' format \
     'status' '%%B$(coalesce "%b" "%p" "%c")%s%A%B%S%i%I%u%f%%b'
 
@@ -73,5 +78,5 @@ fi
 
 # Define prompts.
 PS1='${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}%B%F{4}%~%b%(!. %B%F{1}#%b.)$(_prompt_sorin_vimode)%f '
-RPS1='${VIRTUAL_ENV:+"%F{3}(${VIRTUAL_ENV:t})"}%(?:: %F{1}✘ %?)${VIM:+" %B%F{6}V%b"}${(e)git_info[status]}%f'
+RPS1='${VIRTUAL_ENV:+"%F{3}(${VIRTUAL_ENV:t})"}%(?:: %F{1}✘ %?)$(_prompt_node_version)${VIM:+" %B%F{6}V%b"}${(e)git_info[status]}%f'
 SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
