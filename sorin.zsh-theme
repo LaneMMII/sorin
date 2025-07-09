@@ -160,7 +160,7 @@ fi
 # Define prompts.
 PS1='
 $(username)$(current_time)
-${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)$(_prompt)%f '
+${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)%% '
 
 RPS1='%(?:: %F{1}✘ %?)$(_prompt_node_version)${(e)git_info[status]}%f'
 
