@@ -66,7 +66,7 @@ function spectrum_bls() {
 ##################################################################################
 
 right_triangle() {
-  return # echo $'\ue0b0'
+  echo $'\ue0b0'
 }
 
 hashtag() {
@@ -113,7 +113,7 @@ _prompt_node_version() {
 }
 
 _prompt() {
-  print -n " %B%F{7}% %b"
+  print -n " %B%F{7}%% %b"  # Modulo sign %%
 }
 
 _directory() {
