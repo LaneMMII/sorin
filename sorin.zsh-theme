@@ -1,34 +1,10 @@
 # vim:et sts=2 sw=2 ft=zsh
 #
 # A simple theme that displays relevant, contextual information.
-#
-# A simplified fork of the original sorin theme from
-# https://github.com/sorin-ionescu/prezto/blob/master/modules/prompt/functions/prompt_sorin_setup
-#
+# A simplified fork of the original sorin theme.
 # Requires the `git-info` zmodule to be included in the .zimrc file.
 
-#
-# 16 Terminal Colors
-# -- ---------------
-#  0 black
-#  1 red
-#  2 green
-#  3 yellow
-#  4 blue
-#  5 magenta
-#  6 cyan
-#  7 white
-#  8 bright black
-#  9 bright red
-# 10 bright green
-# 11 bright yellow
-# 12 bright blue
-# 13 bright magenta
-# 14 bright cyan
-# 15 bright white
-#
-
-# https://github.com/ohmyzsh/ohmyzsh/blob/master/lib/spectrum.zsh#L23 ############
+# Terminal color codes
 typeset -AHg FX FG BG
 
 FX=(
@@ -45,8 +21,8 @@ for color in {000..255}; do
   BG[$color]="%{[48;5;${color}m%}"
 done
 
-# Show all 256 colors with color number
-function spectrum_ls() {
+# Color test functions (optional)
+spectrum_ls() {
   setopt localoptions nopromptsubst
   local ZSH_SPECTRUM_TEXT=${ZSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab oris}
   for code in {000..255}; do
@@ -54,8 +30,7 @@ function spectrum_ls() {
   done
 }
 
-# Show all 256 colors where the background is set to specific color
-function spectrum_bls() {
+spectrum_bls() {
   setopt localoptions nopromptsubst
   local ZSH_SPECTRUM_TEXT=${ZSH_SPECTRUM_TEXT:-Arma virumque cano Troiae qui primus ab oris}
   for code in {000..255}; do
@@ -63,8 +38,7 @@ function spectrum_bls() {
   done
 }
 
-##################################################################################
-
+# Glyph functions
 right_triangle() {
   echo $'\ue0b0'
 }
@@ -78,7 +52,7 @@ arrow_start() {
 }
 
 arrow_end() {
-   print -n "%b%{$reset_color%}%{$FG[$ARROW_BG]%}%{$BG[$NEXT_ARROW_BG]%}$(right_triangle)%{$reset_color%}"
+  print -n "%b%{$reset_color%}%{$FG[$ARROW_BG]%}%{$BG[$NEXT_ARROW_BG]%}$(right_triangle)%{$reset_color%}"
 }
 
 ok_username() {
@@ -102,7 +76,6 @@ current_time() {
   print -n "$(arrow_start) %{$FG[239]%}%*%{$reset_color%} $(arrow_end)"
 }
 
-# return err_username if there are errors, ok_username otherwise
 username() {
   print -n "%(?.$(ok_username).$(err_username))"
 }
@@ -110,10 +83,6 @@ username() {
 _prompt_node_version() {
   NODE_VERSION=$(nvm current)
   print -n " %B%F{3}${NODE_VERSION}%b"
-}
-
-_prompt() {
-  print -n " %B%F{7}%% %b"  # Modulo sign %%
 }
 
 _directory() {
@@ -138,7 +107,6 @@ setopt nopromptbang prompt{cr,percent,sp,subst}
 
 typeset -gA git_info
 if (( ${+functions[git-info]} )); then
-  # Set git-info parameters.
   zstyle ':zim:git-info' verbose yes
   zstyle ':zim:git-info:action' format '%F{7}:%F{9}%s'
   zstyle ':zim:git-info:ahead' format ' %F{13}⬆'
@@ -152,16 +120,16 @@ if (( ${+functions[git-info]} )); then
   zstyle ':zim:git-info:untracked' format ' %F{7}⭐'
   zstyle ':zim:git-info:keys' format \
     'status' '%%B$(coalesce "%b" "%p" "%c")%s%A%B%S%i%I%u%f%%b'
-
-  # Add hook for calling git-info before each command.
   autoload -Uz add-zsh-hook && add-zsh-hook precmd git-info
 fi
 
-# Define prompts.
+# ✅ Main prompt (left)
 PS1='
 $(username)$(current_time)
-${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)%% '
+${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)λ '
 
+# ✅ Right prompt
 RPS1='%(?:: %F{1}✘ %?)$(_prompt_node_version)${(e)git_info[status]}%f'
 
+# Spell correction prompt
 SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
