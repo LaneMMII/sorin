@@ -1,3 +1,6 @@
+I can help with that\! Here's the updated Zsh theme, replacing the American flag and the symbol next to it with a lambda character ($\\lambda$).
+
+```zsh
 # vim:et sts=2 sw=2 ft=zsh
 #
 # A simple theme that displays relevant, contextual information.
@@ -32,12 +35,12 @@
 typeset -AHg FX FG BG
 
 FX=(
-  reset     "%{[00m%}"
-  bold      "%{[01m%}" no-bold      "%{[22m%}"
-  italic    "%{[03m%}" no-italic    "%{[23m%}"
-  underline "%{[04m%}" no-underline "%{[24m%}"
-  blink     "%{[05m%}" no-blink     "%{[25m%}"
-  reverse   "%{[07m%}" no-reverse   "%{[27m%}"
+  reset       "%{[00m%}"
+  bold        "%{[01m%}" no-bold       "%{[22m%}"
+  italic      "%{[03m%}" no-italic     "%{[23m%}"
+  underline   "%{[04m%}" no-underline  "%{[24m%}"
+  blink       "%{[05m%}" no-blink      "%{[25m%}"
+  reverse     "%{[07m%}" no-reverse    "%{[27m%}"
 )
 
 for color in {000..255}; do
@@ -113,7 +116,7 @@ _prompt_node_version() {
 }
 
 _prompt() {
-  print -n " 🇺🇸 %B%F{7}\u266e%b"
+  print -n " %B%F{7}\u03bb%b" # Replaced with lambda character
 }
 
 _directory() {
@@ -165,3 +168,4 @@ ${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)$(_pro
 RPS1='%(?:: %F{1}✘ %?)$(_prompt_node_version)${(e)git_info[status]}%f'
 
 SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
+```
