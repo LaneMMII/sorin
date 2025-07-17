@@ -113,7 +113,7 @@ _prompt_node_version() {
 }
 
 _prompt() {
-  print -n " 🇺🇸 %B%F{7}\u266e%b"
+  print -n " λ %B%F{7}\u266e%b"
 }
 
 _directory() {
