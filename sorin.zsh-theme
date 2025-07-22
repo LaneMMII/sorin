@@ -65,9 +65,9 @@ function spectrum_bls() {
 
 ##################################################################################
 
-# right_triangle() {
-#  echo $'\ue0b0'
-# }
+right_triangle() {
+ echo $'\ue0b0'
+}
 
 hashtag() {
   echo $'\u266f'
@@ -143,7 +143,7 @@ if (( ${+functions[git-info]} )); then
   zstyle ':zim:git-info:action' format '%F{7}:%F{9}%s'
   zstyle ':zim:git-info:ahead' format ' %F{13}⬆'
   zstyle ':zim:git-info:behind' format ' %F{13}⬇'
-  zstyle ':zim:git-info:branch' format ' %{$FG[235]%}%{$BG[112]%} \ue0a0 %b %K{0}'
+  zstyle ':zim:git-info:branch' format ' %{$FG[235]%}%{$BG[112]%} %b %K{0}'
   zstyle ':zim:git-info:commit' format ' %F{3}%c'
   zstyle ':zim:git-info:indexed' format ' %F{2}🎁'
   zstyle ':zim:git-info:unindexed' format ' %F{1}🚧'
