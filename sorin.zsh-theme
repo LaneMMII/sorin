@@ -65,9 +65,9 @@ function spectrum_bls() {
 
 ##################################################################################
 
-right_triangle() {
-  echo $'\ue0b0'
-}
+# right_triangle() {
+#  echo $'\ue0b0'
+# }
 
 hashtag() {
   echo $'\u266f'
