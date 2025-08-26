@@ -162,6 +162,6 @@ PS1='
 $(username)$(current_time)
 ${SSH_TTY:+"%F{9}%n%F{7}@%F{3}%m "}$(_directory)%(!. %B%F{1}$(hashtag)%b.)$(_prompt)%f '
 
-RPS1='%(?:: %F{1}✘ %?)$(_prompt_node_version)${(e)git_info[status]}%f'
+RPS1='%(?:: %F{1}✘ %?)${(e)git_info[status]}%f'
 
 SPROMPT='zsh: correct %F{1}%R%f to %F{2}%r%f [nyae]? '
